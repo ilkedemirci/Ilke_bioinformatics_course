@@ -1,0 +1,232 @@
+---
+title: "Bioinformatics_Assignment"
+author: "Ilke Demirci"
+date: "2023-03-08"
+output: html_document
+---
+# Assignment 1 – Literature
+1.	What is the medically relevant insight from the article? 
+Ovarian cancer causes changes in the cervicovaginal microbiota where the Lactobacillus strain is low level, although the microbiota is more diverse in terms of several different strains of bacteria, regardless of menopausal status. A similar effect was observed in the postmenopausal donors.
+2.	Which genomics technology/ technologies were used? 
+DNA extraction from the cervical smear samples for both malignant and bening tumors was performed. 16s rRNA gene amplicons were also sequencer with the MiSeq platform. The data was first demultiplexed and stitched together to reconstruct the amplicons, followed by filtering out low quality reads. Further data processing was done in order to trim adapter and primer sequences. Subsequently, the dataset was analyzed with QIIME data analysis tool. Machine learning algorithms were also used in order to distinguish premenopausal and postmenopausal cervicovaginal microbiota. 
+3.	Further related research questions 
+List and explain at least three questions/ hypotheses you can think of that extend the analysis presented in the paper. 
+-	Does microbiota composition of the cervicovaginal environment change with age at different stages that affect reproduction (i.e. puberty, premenopausal and postmenopausal stages)? This question can be answered by collecting longitudinal smear samples from donors spanning at least 2 of these 3 stages. 
+- The relationship between the microbiota change and ovarian cancer can be further investigated. Does the decrease in Lactobacillus content and the increase in microbiota diversity which were observed in ovarian cancer have a causal effect for cancer? 
+-	What is the mechanistic effect of hormone replacement therapy in postmenopausal donors in terms of microbiota diversity and cancer outcomes? If the change in microbiota diversity is related to the decline in some of the female reproductive hormones such as estrogen, can the microbiota be reversed to premenopausal characteristics with hormone replacement therapy? And what would be the prevalence of ovarian cancer in such patients? 
+
+#Task4 - Basic R operations
+```{r}
+#square root of 10
+sqrt(10)
+```
+```{r}
+#logarithm of 32 to the base 2
+log2(32)
+log(32)/log(2)
+```
+```{r}
+#sum of the numbers from 1 to 1000
+sum(1:1000)
+```
+```{r}
+#sum of all even numbers from 2 to 1000
+x = seq(from = 2, to = 1000, by = 2) #create a variable to save even integers from 2 to 1000
+sum(x) #sum integers
+```
+```{r}
+#How many pairwise comparisons are there for 100 genes
+choose(100,2)
+```
+```{r}
+#how many ways to arrange 100 genes in triples
+choose(100,3)
+```
+
+#Task 5 - Using R example datasets
+```{r}
+#load data CO2
+data("CO2")
+```
+```{r}
+#Describe briefly the content of the CO2 dataset using the help function
+help(CO2)
+#The CO2 data frame has 84 rows and 5 columns of data from an experiment on the cold tolerance of the grass species Echinochloa crus-galli.
+```
+
+```{r}
+#average and median CO2 uptake of the plants from Quebec and Mississippi
+mean(CO2$uptake[CO2$Type == "Quebec"])
+mean(CO2$uptake[CO2$Type == "Mississippi"])
+median(CO2$uptake[CO2$Type == "Quebec"])
+median(CO2$uptake[CO2$Type == "Mississippi"])
+```
+#Task 6 - R Functions
+```{r}
+#function that calculates the ratio of the mean and the median of a given vector
+ratio <- function(x) mean(x)/median(x)
+```
+
+```{r}
+#function that ignores the lowest and the highest value from a given vector and calculate the mean
+mean_without <- function(x) { #define function mean_without
+  x = x[x != min(x)] #exclude all minimums in vector x 
+  x = x[x != max(x)] #exclude all maximums in vector x 
+  mean(x) #calculate mean of x with the defined exclusions
+}
+```
+
+#Piping 
+
+Pipes are a way to perform multiple transformations on a piece of data which is readable and computationally efficient. The pipe command, `%>%`, is very useful if you have a linear series of operations to perform on a single object. If you need to transform multiple objects or have a set of operations which are not linear and ordered other approaches should be considered. If you have many transformations to perform, consider breaking the pipe up into multiple intermediate steps.
+
+#The apply-family of functions
+
+The apply family of functions is a way to perform a particular function on a set of data. The main difference between apply functions is which kind of objects they take as input and return as output. They may be very useful for quickly and succinctly performing a certain operation on every item in a dataset without writing out a for loop. 
+
+#Task 7 - Basic visualization with R
+```{r}
+#Compare the distributions of the body heights of the two species from the 'magic_guys.csv' dataset graphically
+magic_guys <- read.csv("magic_guys.csv")
+```
+
+
+```{r}
+par(mfrow=c(2,1))
+# Specifically subset the lenght vector by species and plot separately
+hist(magic_guys$length[magic_guys$species == "jedi"])
+hist(magic_guys$length[magic_guys$species == "sith"])
+```
+```{r}
+par(mfrow=c(2,1))
+# Specifically subset the lenght vector by species and plot separately
+hist(magic_guys$length[magic_guys$species == "jedi"], breaks = 40)
+hist(magic_guys$length[magic_guys$species == "sith"], breaks = 40)
+```
+```{r}
+par(mfrow=c(2,1))
+# Specifically subset the lenght vector by species and plot separately
+hist(magic_guys$length[magic_guys$species == "jedi"], breaks = 20)
+hist(magic_guys$length[magic_guys$species == "sith"], breaks = 20)
+```
+```{r}
+library(ggplot2)
+library(dplyr)
+```
+```{r}
+# Uses ggplot and makes a histogram where the contribution in each bin is colored by species
+p <- ggplot(magic_guys, aes(fill=species, x=length))
+p + geom_histogram()
+```
+```{r}
+# Uses ggplot and makes a histogram where the contribution in each bin is colored by species
+p <- ggplot(magic_guys, aes(fill=species, x=length))
+p + geom_histogram(bins=20)
+```
+```{r}
+p <- ggplot(magic_guys, aes(x=species, y=length))
+p + geom_boxplot()
+ggsave("jedi_vs_sith.svg")
+```
+```{r}
+p <- ggplot(magic_guys, aes(x=species, y=length))
+p + geom_boxplot()
+ggsave("jedi_vs_sith.png")
+```
+```{r}
+p <- ggplot(magic_guys, aes(x=species, y=length))
+p + geom_boxplot()
+ggsave("jedi_vs_sith.pdf")
+```
+```{r}
+microarray <- read.csv("microarray_data.tab", sep="\t")
+```
+
+```{r}
+# The first value indicate rows and second columns
+dim(microarray)
+```
+```{r}
+# Using colsums and is.na to find the NAs per gene.
+na_sums <- data.frame(colSums(is.na(microarray)))
+colnames(na_sums) <- c("na_sum")
+na_sums %>% ggplot(aes(x=na_sum)) + geom_histogram()
+```
+```{r}
+library(data.table)
+# Threshold here is a fraction of the measurements which are NA
+# Made a function which lets you define the threshold
+which_drop <- function(a, threshold) {
+  na_fraction <- data.frame(colSums(is.na(a))/nrow(a))
+  colnames(na_fraction) <- c("na_fraction")
+  rownames(na_fraction) <- colnames(a)
+  row.names(na_fraction)[na_fraction$na_fraction > threshold]
+  
+}
+```
+
+```{r}
+which_drop(microarray, 0.1)
+which_drop(microarray, 0.2)
+which_drop(microarray, 0.5)
+```
+```{r}
+mean_impute <- function(c) {
+  dplyr::replace_na(c, mean(c))
+}
+```
+```{r}
+# Example of non na mean
+mean(microarray$g1, na.rm = TRUE)
+```
+
+```{r}
+library(tidyr)
+# This following code replaces all nans in numeric columns with the mean of that column
+microarray %>% mutate_if(is.numeric,~replace_na(., mean(.,na.rm=TRUE)))
+```
+
+
+
+```{r}
+# We find that the uptake depends on the concentration, there is a difference of the effect of the treatment, but the type has to be taken into account to detect this.
+ggplot(CO2, aes(x=conc, y=uptake, fill=Type, color=Treatment)) +
+  geom_point(alpha=0.50, size=3) +
+  geom_smooth(method=lm, aes(fill=Type)) + 
+  scale_color_manual(values = c("cadetblue", "blueviolet")) + 
+  scale_fill_manual(values = c("grey", "black")) 
+```
+
+# Task 8 - tidy biology
+
+```{r}
+library(tidybiology)
+```
+
+```{r}
+# Extract summary statistics
+chromosome %>% summarise(across(c(variations, protein_codinggenes, mi_rna), list(mean = ~mean(.x, na.rm = TRUE),median = ~median(.x, na.rm = TRUE), max = ~max(.x, na.rm = TRUE))))
+```
+```{r}
+#How does the chromosome size distribute? Used density plot here.
+chromosome %>% ggplot(aes(x=length_mm)) + geom_density()
+```
+
+```{r}
+#Does the number of protein coding genes or miRNAs correlate with the length of the chromosome?
+chromosome %>% ggplot(aes(x=length_mm, y=protein_codinggenes)) + geom_point()
+```
+
+```{r}
+chromosome %>% ggplot(aes(x=length_mm, y=mi_rna)) + geom_point()
+```
+
+```{r}
+#Calculate the same summary statistics for the ‘proteins’ data variables length and mass.
+# Make a list of which summaries I want for lenght and mass - across lets me specify which columns and functions
+proteins %>% summarise(across(c(length, mass), list(mean = ~mean(.x, na.rm = TRUE),median = ~median(.x, na.rm = TRUE), max = ~max(.x, na.rm = TRUE))))
+```
+```{r}
+# Log scale made sense here
+proteins %>% ggplot(aes(x=length, y=mass)) + geom_point() + scale_x_log10() + scale_y_log10()
+```
